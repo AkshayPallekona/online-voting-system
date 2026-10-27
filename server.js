@@ -69,6 +69,9 @@ async function start() {
   });
 }
 
-start();
+// Only start listening when run directly (not when imported by Vercel)
+if (require.main === module) {
+  start();
+}
 
 module.exports = app;
