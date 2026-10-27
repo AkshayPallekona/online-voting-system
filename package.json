@@ -1,0 +1,25 @@
+{
+  "name": "online-voting-system",
+  "version": "1.0.0",
+  "description": "Educational demo of an Online Voting System using Node.js, Express, and MySQL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-mysql-session": "^3.0.3",
+    "express-rate-limit": "^7.4.1",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.0",
+    "helmet": "^8.0.0",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.11.3"
+  },
+  "devDependencies": {
+    "supertest": "^7.0.0"
+  }
+}
