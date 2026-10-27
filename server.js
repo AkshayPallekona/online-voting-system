@@ -14,11 +14,10 @@ const voteRoutes = require('./routes/voteRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 
 const requiredEnv = ['DB_HOST', 'DB_USER', 'DB_NAME', 'SESSION_SECRET'];
-for (const env of requiredEnv) {
-  if (!process.env[env]) {
-    console.error(`Missing required environment variable: ${env}`);
-    process.exit(1);
-  }
+const missingEnv = requiredEnv.filter(e => !process.env[e]);
+if (missingEnv.length > 0) {
+  console.error(`Missing required environment variables: ${missingEnv.join(', ')}`);
+  // Do not process.exit on Vercel — let the function load and return JSON errors
 }
 
 const app = express();
@@ -30,6 +29,17 @@ app.use(helmet({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Return clear JSON if critical config is missing (helps Vercel debugging)
+app.use((req, res, next) => {
+  if (missingEnv && missingEnv.length > 0 && req.path.startsWith('/api')) {
+    return res.status(500).json({
+      success: false,
+      message: `Server configuration error: missing environment variables (${missingEnv.join(', ')}). Set them in Vercel dashboard.`
+    });
+  }
+  next();
+});
 
 const sessionStore = new MySQLStore({
   clearExpired: true,
